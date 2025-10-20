@@ -1,5 +1,7 @@
 package dev.jkiakumbo.application.dtos
 
+import dev.jkiakumbo.domain.models.CreditCard
+import dev.jkiakumbo.domain.models.Transaction
 import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.util.UUID
@@ -28,3 +30,32 @@ data class TransactionResponse(
     val description: String,
     val timestamp: LocalDateTime
 )
+
+fun CreditCard.toResponse(): CreditCardResponse {
+    return CreditCardResponse(
+        id = cardId.value,
+        cardNumber = cardNumber,
+        cardHolderName = cardHolderName,
+        expirationDate = expirationDate,
+        creditLimit = creditLimit,
+        availableCredit = availableCredit,
+        currentBalance = currentBalance,
+        userId = userId,
+        status = status.name,
+        createdAt = createdAt
+    )
+}
+
+fun Transaction.toResponse(): TransactionResponse {
+    return TransactionResponse(
+        id = id.value,
+        cardId = cardId.value,
+        amount = amount,
+        currency = currency,
+        merchant = merchant,
+        transactionType = transactionType.name,
+        status = status.name,
+        description = description,
+        timestamp = timestamp
+    )
+}
