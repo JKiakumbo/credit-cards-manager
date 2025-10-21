@@ -10,7 +10,10 @@ repositories {
 }
 
 dependencies {
+    implementation(project(":domain"))
+    implementation(kotlin("stdlib"))
     testImplementation(kotlin("test"))
+
 }
 
 tasks.test {
