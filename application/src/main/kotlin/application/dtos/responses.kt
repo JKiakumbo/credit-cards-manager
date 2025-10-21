@@ -1,7 +1,8 @@
 package dev.jkiakumbo.ccm.application.dtos
 
-import dev.jkiakumbo.domain.models.CreditCard
-import dev.jkiakumbo.domain.models.Transaction
+
+import dev.jkiakumbo.ccm.domain.models.CreditCard
+import dev.jkiakumbo.ccm.domain.models.Transaction
 import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.util.UUID
