@@ -1,4 +1,4 @@
-package dev.jkiakumbo.application.dtos
+package dev.jkiakumbo.ccm.application.dtos
 
 import dev.jkiakumbo.domain.models.CreditCard
 import dev.jkiakumbo.domain.models.Transaction

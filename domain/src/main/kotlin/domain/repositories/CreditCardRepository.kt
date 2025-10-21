@@ -1,7 +1,7 @@
-package dev.jkiakumbo.domain.repositories
+package dev.jkiakumbo.ccm.domain.repositories
 
-import dev.jkiakumbo.domain.models.CreditCard
-import dev.jkiakumbo.domain.models.CreditCardId
+import dev.jkiakumbo.ccm.domain.models.CreditCard
+import dev.jkiakumbo.ccm.domain.models.CreditCardId
 
 interface CreditCardRepository {
     fun save(creditCard: CreditCard): CreditCard

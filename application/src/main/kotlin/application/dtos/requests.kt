@@ -1,4 +1,4 @@
-package dev.jkiakumbo.application.dtos
+package dev.jkiakumbo.ccm.application.dtos
 
 import java.math.BigDecimal
 

@@ -1,4 +1,4 @@
-package dev.jkiakumbo.domain.events
+package dev.jkiakumbo.ccm.domain.events
 
 import java.time.LocalDateTime
 import java.time.ZonedDateTime

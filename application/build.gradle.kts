@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "2.2.20"
+    kotlin("jvm")
 }
 
 group = "dev.jkiakumbo.ccm"
@@ -10,7 +10,6 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("stdlib"))
     testImplementation(kotlin("test"))
 }
 

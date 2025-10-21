@@ -1,4 +1,4 @@
-package dev.jkiakumbo.domain.models
+package dev.jkiakumbo.ccm.domain.models
 
 import java.math.BigDecimal
 import java.time.LocalDateTime

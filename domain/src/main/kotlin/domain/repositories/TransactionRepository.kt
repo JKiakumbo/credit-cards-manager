@@ -1,8 +1,8 @@
-package dev.jkiakumbo.domain.repositories
+package dev.jkiakumbo.ccm.domain.repositories
 
-import dev.jkiakumbo.domain.models.CreditCardId
-import dev.jkiakumbo.domain.models.Transaction
-import dev.jkiakumbo.domain.models.TransactionId
+import dev.jkiakumbo.ccm.domain.models.CreditCardId
+import dev.jkiakumbo.ccm.domain.models.Transaction
+import dev.jkiakumbo.ccm.domain.models.TransactionId
 import java.time.LocalDateTime
 
 interface TransactionRepository {
