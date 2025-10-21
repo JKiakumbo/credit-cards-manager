@@ -7,9 +7,15 @@ import dev.jkiakumbo.application.dtos.TransactionResponse
 import dev.jkiakumbo.application.dtos.toResponse
 import dev.jkiakumbo.application.ports.DomainEventPublisher
 import dev.jkiakumbo.domain.events.CreditCardCreatedEvent
+import dev.jkiakumbo.domain.events.TransactionProcessedEvent
 import dev.jkiakumbo.domain.models.CardStatus
 import dev.jkiakumbo.domain.models.CreditCard
 import dev.jkiakumbo.domain.models.CreditCardId
+import dev.jkiakumbo.domain.models.InsufficientCreditException
+import dev.jkiakumbo.domain.models.Transaction
+import dev.jkiakumbo.domain.models.TransactionId
+import dev.jkiakumbo.domain.models.TransactionStatus
+import dev.jkiakumbo.domain.models.TransactionType
 import dev.jkiakumbo.domain.repositories.CreditCardRepository
 import dev.jkiakumbo.domain.repositories.TransactionRepository
 import java.math.BigDecimal
@@ -61,18 +67,60 @@ class CreditCardServiceImpl(
     }
 
     override fun processTransaction(request: ProcessTransactionRequest): TransactionResponse {
-        TODO("Not yet implemented")
+        val card = creditCardRepository.findByCardNumber(request.cardNumber)
+            ?: throw IllegalArgumentException("Credit card not found")
+
+        val transaction = Transaction(
+            id = TransactionId(),
+            cardId = card.cardId,
+            amount = request.amount,
+            currency = request.currency,
+            merchant = request.merchant,
+            transactionType = TransactionType.PURCHASE,
+            status = TransactionStatus.PENDING,
+            description = request.description
+        )
+
+        return try {
+            val updatedCard = card.processPayment(request.amount)
+            creditCardRepository.update(updatedCard)
+
+            val approvedTransaction = transaction.copy(status = TransactionStatus.APPROVED)
+            val savedTransaction = transactionRepository.save(approvedTransaction)
+
+            eventPublisher.publish(
+                TransactionProcessedEvent(
+                    transactionId = savedTransaction.id.value.toString(),
+                    cardId = card.cardId.value.toString(),
+                    amount = savedTransaction.amount.toString(),
+                    merchant = savedTransaction.merchant,
+                    status = savedTransaction.status.name
+                )
+            )
+
+            savedTransaction.toResponse()
+        } catch (e: InsufficientCreditException) {
+            val declinedTransaction = transaction.copy(status = TransactionStatus.DECLINED)
+            val savedTransaction = transactionRepository.save(declinedTransaction)
+            savedTransaction.toResponse()
+        }
     }
 
     override fun getCardTransactions(cardId: String): List<TransactionResponse> {
-        TODO("Not yet implemented")
+        return transactionRepository.findByCardId(CreditCardId(UUID.fromString(cardId)))
+            .map { it.toResponse() }
     }
 
-    override fun updateCreditLimit(
-        cardId: String,
-        limit: BigDecimal
-    ): CreditCardResponse {
-        TODO("Not yet implemented")
+    override fun updateCreditLimit(cardId: String, limit: BigDecimal): CreditCardResponse {
+        val card = creditCardRepository.findById(CreditCardId(UUID.fromString(cardId)))
+            ?: throw IllegalArgumentException("Credit card not found")
+
+        val updatedCard = card.copy(
+            creditLimit = limit,
+            availableCredit = limit.subtract(card.currentBalance)
+        )
+
+        return creditCardRepository.update(updatedCard).toResponse()
     }
 
 }

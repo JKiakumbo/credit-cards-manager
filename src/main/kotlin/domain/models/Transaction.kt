@@ -14,7 +14,7 @@ data class Transaction(
     val transactionType: TransactionType,
     val status: TransactionStatus,
     val description: String,
-    val timestamp: LocalDateTime
+    val timestamp: LocalDateTime = LocalDateTime.now()
 )
 
 enum class TransactionType {
